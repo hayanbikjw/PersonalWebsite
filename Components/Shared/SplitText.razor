@@ -1,0 +1,21 @@
+@* 글자마다 --i 인덱스를 부여해 순차(stagger) 애니메이션을 만듭니다 *@
+<span class="split @Class" aria-label="@Text">
+    @for (var i = 0; i < Text.Length; i++)
+    {
+        var ch = Text[i];
+        if (char.IsWhiteSpace(ch))
+        {
+            <span class="split__space" aria-hidden="true">&nbsp;</span>
+        }
+        else
+        {
+            <span class="split__char" aria-hidden="true" style="--i:@(Offset + i)">@ch</span>
+        }
+    }
+</span>
+
+@code {
+    [Parameter, EditorRequired] public string Text { get; set; } = "";
+    [Parameter] public int Offset { get; set; }
+    [Parameter] public string? Class { get; set; }
+}

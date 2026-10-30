@@ -1,0 +1,30 @@
+@* 별자리 장식: 가는 선으로 이은 별 *@
+<svg class="constellation @Class" viewBox="@ViewBox" fill="none" aria-hidden="true">
+    <polyline class="constellation__line" points="@Line" />
+    @for (var i = 0; i < Stars.Length; i++)
+    {
+        <circle class="constellation__star" style="--i:@i" cx="@Stars[i].X" cy="@Stars[i].Y" r="@(i % 3 == 0 ? 4 : 2.5)" />
+    }
+</svg>
+
+@code {
+    /// <summary>dipper(북두칠성) 또는 cassiopeia(카시오페이아).</summary>
+    [Parameter] public string Kind { get; set; } = "dipper";
+    [Parameter] public string? Class { get; set; }
+
+    static readonly (int X, int Y)[] Dipper = [(12, 34), (66, 46), (108, 68), (150, 92), (160, 142), (226, 152), (242, 102)];
+    static readonly (int X, int Y)[] Cassiopeia = [(10, 44), (58, 92), (104, 58), (146, 112), (196, 28)];
+
+    (int X, int Y)[] Stars => Kind == "cassiopeia" ? Cassiopeia : Dipper;
+    string ViewBox => Kind == "cassiopeia" ? "0 0 206 124" : "0 0 254 164";
+
+    // 북두칠성은 국자 부분이 닫히도록 네 번째 별로 되돌아갑니다
+    string Line
+    {
+        get
+        {
+            var points = Kind == "cassiopeia" ? Stars : [.. Stars, Stars[3]];
+            return string.Join(" ", points.Select(p => $"{p.X},{p.Y}"));
+        }
+    }
+}

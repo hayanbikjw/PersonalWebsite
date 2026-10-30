@@ -1,0 +1,70 @@
+﻿@inherits LayoutComponentBase
+@inject SiteDataService SiteData
+
+@{
+    var data = SiteData.Data;
+    var blog = data.Links.FirstOrDefault(l => l.Icon == "blog");
+}
+
+@* 페이지 전환 커튼 (로드 시 열리고, 내부 링크 클릭 시 닫힘) *@
+<div class="curtain" aria-hidden="true">
+    <span class="curtain__panel curtain__panel--1"></span>
+    <span class="curtain__panel curtain__panel--2"></span>
+    <span class="curtain__panel curtain__panel--3"></span>
+</div>
+
+<div class="scroll-progress" aria-hidden="true"></div>
+
+<header class="site-header">
+    <a class="site-header__logo" href="">@data.Site.Title</a>
+
+    <input type="checkbox" id="nav-toggle" class="nav-toggle" aria-label="메뉴 열기" />
+    <label for="nav-toggle" class="nav-burger" aria-hidden="true"><span></span><span></span><span></span></label>
+
+    <nav class="site-nav">
+        <a href="#about">About</a>
+        <a href="#skills">Skills</a>
+        <a href="@WebsiteKeys.ProjectsUrl">Projects</a>
+        @if (blog is not null)
+        {
+            <a href="@blog.Url" target="_blank" rel="noopener noreferrer">Blog</a>
+        }
+        <a href="#contact">Contact</a>
+    </nav>
+</header>
+
+<main class="site-main">
+    @Body
+</main>
+
+<footer class="site-footer">
+    <div class="site-footer__links">
+        @foreach (var link in data.Links)
+        {
+            <a class="icon-btn" href="@link.Url" target="_blank" rel="noopener noreferrer" aria-label="@link.Label">
+                <Icon Name="@link.Icon" />
+            </a>
+        }
+    </div>
+    <div class="site-footer__text">
+        <p>© @DateTime.Now.Year @data.Profile.Name. All rights reserved.</p>
+        @foreach (var line in data.Site.Footer.Split("\n", StringSplitOptions.RemoveEmptyEntries | StringSplitOptions.TrimEntries))
+        {
+            <p>@line</p>
+        }
+    </div>
+    <button type="button" class="page-top">TOP</button>
+</footer>
+
+@code {
+    public static string Initials(string name)
+    {
+        var parts = name.Split(' ', StringSplitOptions.RemoveEmptyEntries);
+        return parts.Length switch
+        {
+            0 => "",
+            1 => parts[0][..Math.Min(2, parts[0].Length)].ToUpperInvariant(),
+            _ => string.Concat(parts.Take(2).Select(p => char.ToUpperInvariant(p[0])))
+        };
+    }
+}

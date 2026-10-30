@@ -1,0 +1,153 @@
+@page "/projects"
+@page "/projects/{*Slug}"
+@inject BlazorStaticContentService<ProjectFrontMatter> ProjectService
+@inject SiteDataService SiteData
+
+@if (string.IsNullOrWhiteSpace(Slug))
+{
+    var all = ProjectService.Posts.Sorted().ToList();
+
+    <PageTitle>Projects · @SiteData.Data.Site.Title</PageTitle>
+
+    <section class="page-hero">
+        <div class="hero__sky" aria-hidden="true">
+            <canvas class="sky"></canvas>
+            <Constellation Kind="cassiopeia" Class="constellation--page" />
+        </div>
+        <h1 class="page-hero__title"><SplitText Text="Projects" /></h1>
+        <p class="page-hero__sub">지금까지 만든 프로젝트 @(all.Count)개</p>
+    </section>
+
+    <section class="section section--tight">
+        @if (ProjectService.AllTags.Count > 0)
+        {
+            <div class="filter" role="group" aria-label="태그 필터" data-reveal="up">
+                <button type="button" class="filter__btn is-active" data-filter="*">All</button>
+                @foreach (var tag in ProjectService.AllTags.Values.OrderBy(t => t.Name))
+                {
+                    <button type="button" class="filter__btn" data-filter="@tag.Name">#@tag.Name</button>
+                }
+            </div>
+        }
+
+        @if (all.Count == 0)
+        {
+            <p class="empty">아직 등록된 프로젝트가 없습니다. <code>Content/Projects</code>에 마크다운 파일을 추가해보세요!</p>
+        }
+        else
+        {
+            <div class="project-grid">
+                @for (var i = 0; i < all.Count; i++)
+                {
+                    <ProjectCard Post="all[i]" Index="i % 3" />
+                }
+            </div>
+        }
+    </section>
+    return;
+}
+
+@if (_post is null)
+{
+    <PageTitle>Not found</PageTitle>
+    <section class="page-hero">
+        <h1 class="page-hero__title">프로젝트를 찾을 수 없어요</h1>
+        <a class="btn btn--primary" href="@ProjectService.Options.PageUrl"><Icon Name="arrow-left" Size="18" /><span>목록으로</span></a>
+    </section>
+    return;
+}
+
+@{ var fm = _post.FrontMatter; }
+
+<PageTitle>@fm.Title · @SiteData.Data.Site.Title</PageTitle>
+
+<article class="project-detail" style="@ProjectCard.AccentStyle(fm.Color)">
+    <header class="project-detail__hero">
+        <a class="back-link" href="@ProjectService.Options.PageUrl"><Icon Name="arrow-left" Size="16" /> Projects</a>
+
+        <div class="project-detail__cover" data-reveal="zoom">
+            @if (!string.IsNullOrWhiteSpace(fm.Thumbnail))
+            {
+                <img src="@fm.Thumbnail" alt="" />
+            }
+            else
+            {
+                <Icon Name="star" Size="72" Class="project-card__mark" />
+            }
+        </div>
+
+        <div class="project-detail__meta">
+            <span class="project-card__period">@fm.PeriodText()</span>
+            @if (!string.IsNullOrWhiteSpace(fm.Status))
+            {
+                <span class="badge">@fm.Status</span>
+            }
+        </div>
+        <h1 class="project-detail__title"><SplitText Text="@fm.Title" /></h1>
+        <p class="project-card__credit">@fm.CreditText(SiteData.Data.Profile.Name)</p>
+        <p class="project-detail__lead">@fm.Lead</p>
+
+        <ul class="tag-list tag-list--center">
+            @foreach (var tag in fm.Tags)
+            {
+                <li class="tag">#@tag</li>
+            }
+        </ul>
+
+        <div class="hero__cta">
+            @if (!string.IsNullOrWhiteSpace(fm.Github))
+            {
+                <a class="btn btn--primary" href="@fm.Github" target="_blank" rel="noopener noreferrer"><Icon Name="github" Size="18" /><span>GitHub</span></a>
+            }
+            @foreach (var link in fm.Links)
+            {
+                <a class="btn btn--ghost" href="@link.Url" target="_blank" rel="noopener noreferrer"><Icon Name="@link.Icon" Size="18" /><span>@link.Label</span></a>
+            }
+        </div>
+    </header>
+
+    <div class="prose" data-reveal="up">
+        @((MarkupString)_post.HtmlContent)
+    </div>
+
+    <nav class="pager" aria-label="다른 프로젝트">
+        @if (_prev is not null)
+        {
+            <a class="pager__link" href="@ProjectService.Options.PageUrl/@_prev.Url">
+                <span class="pager__label"><Icon Name="arrow-left" Size="16" /> 이전</span>
+                <span class="pager__title">@_prev.FrontMatter.Title</span>
+            </a>
+        }
+        else
+        {
+            <span></span>
+        }
+        @if (_next is not null)
+        {
+            <a class="pager__link pager__link--next" href="@ProjectService.Options.PageUrl/@_next.Url">
+                <span class="pager__label">다음 <Icon Name="arrow-right" Size="16" /></span>
+                <span class="pager__title">@_next.FrontMatter.Title</span>
+            </a>
+        }
+    </nav>
+</article>
+
+@code {
+    [Parameter] public string? Slug { get; set; }
+
+    Post<ProjectFrontMatter>? _post, _prev, _next;
+
+    protected override void OnInitialized()
+    {
+        if (string.IsNullOrWhiteSpace(Slug)) return;
+
+        var sorted = ProjectService.Posts.Sorted().ToList();
+        var index = sorted.FindIndex(p => p.Url == Slug);
+        if (index < 0) return;
+
+        _post = sorted[index];
+        // 최신순 목록이므로 이전 = 더 오래된 프로젝트, 다음 = 더 새로운 프로젝트
+        _prev = index < sorted.Count - 1 ? sorted[index + 1] : null;
+        _next = index > 0 ? sorted[index - 1] : null;
+    }
+}

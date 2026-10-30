@@ -1,0 +1,75 @@
+# ============================================================
+#  사이트 데이터 파일
+#  - 이 파일의 값만 바꾸면 홈/헤더/푸터 내용이 바뀝니다.
+#  - 키 이름은 camelCase 그대로 두고 값만 수정하세요.
+#  - 프로젝트는 Content/Projects/*.md 에 하나씩 작성합니다.
+# ============================================================
+
+site:
+  title: "Hayanbi"                       # 브라우저 탭 / 헤더 로고
+  description: "하얀비 홈페이지"
+  url: "https://hayanbi.net"               # 배포 주소 (Program.cs 의 WebsiteKeys.SiteUrl 도 같이 변경)
+  footer: "Made with BlazorStatic · Built by Claude"   # 푸터 저작권 줄 아래에 표시. 줄을 더 나누려면 footer: | 뒤에 여러 줄로 작성
+
+profile:
+  name: "하얀비"
+  greeting: "안녕하세요!"
+  roles:                                   # 히어로에 나란히 표시
+    - "Game Developer"
+    - "Creator"
+  tagline: "재미있는 것을 만드는 것을 좋아합니다"
+  avatar: "images/nya.webp"                # 예: images/avatar.png (wwwroot 기준). 비우면 이니셜 표시
+  location: "Incheon, Korea"
+  email: "me@hayanbi.net"
+  about:                                   # About 섹션 문단 (여러 개 가능)
+    - "게임 개발을 하고 있습니다. 재미있는 게임을 만들기 위해 고민하고 노력합니다."
+    - "가끔씩은 밤하늘을 올려다보며 별을 관측합니다."
+    - "예쁘고 반짝이는 게 좋습니다. 컴퓨터 그래픽스 쪽에도 관심이 많습니다. "
+  facts:                                   # About 옆 작은 카드
+    - label: "Based in"
+      value: "Incheon"
+    - label: "Focus"
+      value: "Game / .NET"
+    - label: "Currently"
+      value: "Building things"
+
+skills:
+  - category: "Languages"
+    items: ["C#", "C/C++", "Python"]
+  - category: "Frameworks"
+    items: ["Blazor", "ASP.NET Core", "Unity"]
+  - category: "Tools"
+    items: ["Git", "Visual Studio"]
+
+timeline:                                  # 경력 / 학력 / 활동 (위에서부터 최신순 권장)
+  - period: "2026.09"
+    title: "'Guildream' steam, stove 출시"
+    place: "steam, stove"
+    description: "만든 게임을 steam과 stove 양 플랫폼에 출시했습니다."
+  - period: "2025.07"
+    title: "'TRUMPvsCHESS' itch.io 출시"
+    place: "itch.io"
+    description: "만든 게임을 처음으로 공개했습니다."
+  - period: "2023.12"
+    title: "2023 대구x엔젤 인디게임 페스티벌 동상 수상"
+    place: "대구콘텐츠비즈니스센터"
+    description: "만든 게임으로 인디게임 페스티벌에서 수상하였습니다."
+  - period: "2023 — Now"
+    title: "인하대학교 컴퓨터공학과 학부 재학중"
+    place: "인하대학교"
+    description: "인하대학교에서 컴퓨터공학을 전공하고 있습니다."
+
+links:                                     # icon: github | linkedin | x | twitter | mail | instagram | youtube | blog | resume | link
+                                           # icon 이 blog 인 항목은 상단 Blog 탭의 링크로도 쓰입니다
+  - label: "GitHub"
+    url: "https://github.com/hayanbikjw"
+    icon: "github"
+  - label: "Blog"
+    url: "https://blog.ariel.moe"
+    icon: "blog"
+  - label: "Email"
+    url: "mailto:me@hayanbi.net"
+    icon: "mail"
+  - label: "Twitter"
+    url: "https://twitter.com/_hayanbi"
+    icon: "twitter"

@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?><urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
+  <url>
+    <loc>https://example.com/Error</loc>
+  </url>
+  <url>
+    <loc>https://example.com/</loc>
+  </url>
+  <url>
+    <loc>https://example.com/not-found</loc>
+  </url>
+  <url>
+    <loc>https://example.com/projects</loc>
+  </url>
+  <url>
+    <loc>https://example.com/projects/Guildream</loc>
+    <lastmod>2026-09-29</lastmod>
+  </url>
+  <url>
+    <loc>https://example.com/projects/TRUMPvsCHESS</loc>
+    <lastmod>2025-07-06</lastmod>
+  </url>
+</urlset>

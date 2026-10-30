@@ -1,0 +1,27 @@
+<Project Sdk="Microsoft.NET.Sdk.Web">
+
+  <PropertyGroup>
+    <TargetFramework>net10.0</TargetFramework>
+    <Nullable>enable</Nullable>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <BlazorDisableThrowNavigationException>true</BlazorDisableThrowNavigationException>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="BlazorStatic" Version="1.0.0-beta.17" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <!-- 사이트 데이터(Content 폴더)를 출력 폴더로 복사 -->
+    <None Update="Content/**/*">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <!-- dotnet watch 시 Content 변경도 감지 -->
+    <Watch Include="Content/**/*" />
+    <!-- 생성된 정적 사이트는 빌드에서 제외 -->
+    <Content Remove="output/**" />
+    <None Remove="output/**" />
+    <Compile Remove="output/**" />
+  </ItemGroup>
+
+</Project>

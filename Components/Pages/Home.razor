@@ -1,0 +1,155 @@
+﻿@page "/"
+@inject SiteDataService SiteData
+@inject BlazorStaticContentService<ProjectFrontMatter> Projects
+
+@{
+    var data = SiteData.Data;
+    var profile = data.Profile;
+    var featured = Projects.Posts.Where(p => p.FrontMatter.Featured).Sorted().Take(6).ToList();
+}
+
+<PageTitle>@data.Site.Title</PageTitle>
+
+@* ───────── HERO ───────── *@
+<section class="hero">
+    <div class="hero__sky" aria-hidden="true">
+        <canvas class="sky"></canvas>
+        <Constellation Kind="dipper" Class="constellation--dipper" />
+        <Constellation Kind="cassiopeia" Class="constellation--cassiopeia" />
+    </div>
+
+    <div class="hero__stage">
+        <p class="hero__greeting">@profile.Greeting</p>
+        <h1 class="hero__name"><SplitText Text="@profile.Name" Offset="4" /></h1>
+        <p class="hero__role">@string.Join(" · ", profile.Roles)</p>
+        <p class="hero__tagline">@profile.Tagline</p>
+        <div class="hero__cta">
+            <a class="btn btn--primary" href="@WebsiteKeys.ProjectsUrl">
+                <span>Projects 보기</span><Icon Name="arrow-right" Size="18" />
+            </a>
+            <a class="btn btn--ghost" href="#contact"><span>Contact</span></a>
+        </div>
+    </div>
+</section>
+
+@* ───────── ABOUT ───────── *@
+<section id="about" class="section">
+    <SectionTitle Title="About" Sub="저를 소개합니다!" />
+    <div class="about">
+        <div class="about__avatar" data-reveal="zoom">
+            <div class="avatar">
+                @if (!string.IsNullOrWhiteSpace(profile.Avatar))
+                {
+                    <img src="@profile.Avatar" alt="@profile.Name" />
+                }
+                else
+                {
+                    <span class="avatar__initials">@MainLayout.Initials(profile.Name)</span>
+                }
+            </div>
+            @if (!string.IsNullOrWhiteSpace(profile.Location))
+            {
+                <p class="about__location"><Icon Name="pin" Size="16" /> @profile.Location</p>
+            }
+        </div>
+        <div class="about__text">
+            @for (var i = 0; i < profile.About.Count; i++)
+            {
+                <p data-reveal="right" style="--delay:@(i * 120)ms">@profile.About[i]</p>
+            }
+            <dl class="facts" data-reveal="up">
+                @foreach (var fact in profile.Facts)
+                {
+                    <div class="fact">
+                        <dt class="fact__label">@fact.Label</dt>
+                        <dd class="fact__value">@fact.Value</dd>
+                    </div>
+                }
+            </dl>
+        </div>
+    </div>
+</section>
+
+@* ───────── SKILLS ───────── *@
+<section id="skills" class="section">
+    <SectionTitle Title="Skills" Sub="다룰 수 있는 기술" />
+    <div class="skills">
+        @for (var g = 0; g < data.Skills.Count; g++)
+        {
+            var group = data.Skills[g];
+            <div class="skill-row" data-reveal="up" style="--delay:@(g * 120)ms">
+                <h3 class="skill-row__title">@group.Category</h3>
+                <ul class="chip-list">
+                    @for (var i = 0; i < group.Items.Count; i++)
+                    {
+                        <li class="chip" style="--i:@i">@group.Items[i]</li>
+                    }
+                </ul>
+            </div>
+        }
+    </div>
+</section>
+
+@* ───────── FEATURED PROJECTS ───────── *@
+<section id="projects" class="section">
+    <SectionTitle Title="Projects" Sub="만든 것들" />
+    @if (featured.Count == 0)
+    {
+        <p class="empty" data-reveal>아직 등록된 프로젝트가 없습니다. <code>Content/Projects</code>에 추가해보세요!</p>
+    }
+    else
+    {
+        <div class="project-grid">
+            @for (var i = 0; i < featured.Count; i++)
+            {
+                <ProjectCard Post="featured[i]" Index="i" />
+            }
+        </div>
+    }
+    <div class="center" data-reveal="up">
+        <a class="btn btn--primary" href="@WebsiteKeys.ProjectsUrl"><span>모든 프로젝트</span><Icon Name="arrow-right" Size="18" /></a>
+    </div>
+</section>
+
+@* ───────── TIMELINE ───────── *@
+@if (data.Timeline.Count > 0)
+{
+    <section id="timeline" class="section">
+        <SectionTitle Title="Chapters" Sub="걸어온 순간들" />
+        <ol class="timeline">
+            @for (var i = 0; i < data.Timeline.Count; i++)
+            {
+                var item = data.Timeline[i];
+                <li class="timeline__item" data-reveal="up">
+                    <span class="timeline__period">@item.Period</span>
+                    <div class="timeline__body">
+                        <h3 class="timeline__title">@item.Title</h3>
+                        <p class="timeline__place">@item.Place</p>
+                        <p class="timeline__desc">@item.Description</p>
+                    </div>
+                </li>
+            }
+        </ol>
+    </section>
+}
+
+@* ───────── CONTACT ───────── *@
+<section id="contact" class="section contact">
+    <SectionTitle Title="Contact" Sub="저를 인터넷에서 찾아보세요" />
+    <p class="contact__big" data-reveal="up">이곳에서도 만나보실 수 있습니다</p>
+    @if (!string.IsNullOrWhiteSpace(profile.Email))
+    {
+        <a class="contact__mail" href="mailto:@profile.Email" data-reveal="up">@profile.Email</a>
+    }
+    <ul class="link-list">
+        @for (var i = 0; i < data.Links.Count; i++)
+        {
+            var link = data.Links[i];
+            <li data-reveal="pop" style="--delay:@(i * 90)ms">
+                <a class="link-pill" href="@link.Url" target="_blank" rel="noopener noreferrer">
+                    <Icon Name="@link.Icon" /> <span>@link.Label</span>
+                </a>
+            </li>
+        }
+    </ul>
+</section>

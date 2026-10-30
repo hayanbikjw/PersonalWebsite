@@ -1,0 +1,48 @@
+@inject BlazorStaticContentService<ProjectFrontMatter> Projects
+@inject SiteDataService SiteData
+
+<article class="project-card" data-reveal="up" style="--delay:@(Index * 90)ms; @AccentStyle(Fm.Color)"
+         data-tags="@string.Join("|", Fm.Tags)">
+    <a class="project-card__link" href="@Projects.Options.PageUrl/@Post.Url">
+        <div class="project-card__thumb">
+            @if (!string.IsNullOrWhiteSpace(Fm.Thumbnail))
+            {
+                <img src="@Fm.Thumbnail" alt="" loading="lazy" />
+            }
+            else
+            {
+                <Icon Name="star" Size="56" Class="project-card__mark" />
+            }
+            <span class="project-card__foil" aria-hidden="true"></span>
+            @if (!string.IsNullOrWhiteSpace(Fm.Status))
+            {
+                <span class="badge">@Fm.Status</span>
+            }
+        </div>
+        <div class="project-card__body">
+            <h3 class="project-card__title">@Fm.Title</h3>
+            <p class="project-card__credit">@Fm.CreditText(SiteData.Data.Profile.Name)</p>
+            <p class="project-card__lead">@Fm.Lead</p>
+            <div class="project-card__foot">
+                <span class="project-card__period">@Fm.PeriodText()</span>
+                <ul class="tag-list">
+                    @foreach (var tag in Fm.Tags)
+                    {
+                        <li class="tag">#@tag</li>
+                    }
+                </ul>
+                <Icon Name="arrow-right" Size="20" Class="project-card__arrow" />
+            </div>
+        </div>
+    </a>
+</article>
+
+@code {
+    [Parameter, EditorRequired] public Post<ProjectFrontMatter> Post { get; set; } = null!;
+    [Parameter] public int Index { get; set; }
+
+    ProjectFrontMatter Fm => Post.FrontMatter;
+
+    public static string AccentStyle(string color) =>
+        string.IsNullOrWhiteSpace(color) ? "" : $"--accent:{color};";
+}

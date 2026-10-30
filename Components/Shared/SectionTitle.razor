@@ -1,0 +1,12 @@
+<header class="section-title" data-reveal>
+    <h2 class="section-title__text"><SplitText Text="@Title" /></h2>
+    @if (!string.IsNullOrWhiteSpace(Sub))
+    {
+        <p class="section-title__sub">@Sub</p>
+    }
+</header>
+
+@code {
+    [Parameter, EditorRequired] public string Title { get; set; } = "";
+    [Parameter] public string? Sub { get; set; }
+}
