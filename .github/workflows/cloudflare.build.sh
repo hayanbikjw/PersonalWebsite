@@ -6,6 +6,10 @@ pushd /tmp
 wget https://dotnet.microsoft.com/download/dotnet/scripts/v1/dotnet-install.sh
 chmod u+x /tmp/dotnet-install.sh
 /tmp/dotnet-install.sh --channel 10.0
+popd
 
-## run the project to build the static files. Ensure launch profile ASPNETCORE_ENVIRONMENT is set to Release!
-dotnet run --launch-profile "netlify" --project ./BlazorStaticWebsite/BlazorStaticWebsite.csproj
+export DOTNET_ROOT="/opt/buildhome/.dotnet"
+export PATH="$DOTNET_ROOT:$PATH"
+
+## 이제 dotnet 명령어가 정상적으로 인식됩니다.
+dotnet run --launch-profile "cloudflare" --project ./Website.csproj
