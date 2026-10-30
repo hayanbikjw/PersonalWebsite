@@ -31,6 +31,19 @@
         }
         <a href="#contact">Contact</a>
     </nav>
+
+    <div class="theme-menu">
+        <button type="button" class="theme-menu__toggle" aria-label="화면 모드 선택" aria-haspopup="menu" aria-expanded="false" aria-controls="theme-menu-list">
+            <Icon Name="monitor" Size="20" Class="theme-icon theme-icon--system" />
+            <Icon Name="sun" Size="20" Class="theme-icon theme-icon--light" />
+            <Icon Name="moon" Size="20" Class="theme-icon theme-icon--dark" />
+        </button>
+        <div class="theme-menu__list" id="theme-menu-list" role="menu" aria-label="화면 모드">
+            <button type="button" class="theme-menu__item" role="menuitemradio" aria-checked="false" data-theme-value="system"><Icon Name="monitor" Size="18" /> 시스템</button>
+            <button type="button" class="theme-menu__item" role="menuitemradio" aria-checked="false" data-theme-value="light"><Icon Name="sun" Size="18" /> 밝게 보기</button>
+            <button type="button" class="theme-menu__item" role="menuitemradio" aria-checked="false" data-theme-value="dark"><Icon Name="moon" Size="18" /> 어둡게 보기</button>
+        </div>
+    </div>
 </header>
 
 <main class="site-main">

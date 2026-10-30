@@ -17,6 +17,13 @@
     --violet: #7a6fe8;
     --pink: #f59ac4;
 
+    --on-violet: #fff;
+    --violet-strong: #6358d8;
+    --header-bg: rgb(255 255 255 / .97);
+    --selection: #d9d2ff;
+    --curtain-1: #cfc8ff;
+    --curtain-2: #e6e1ff;
+
     --accent: var(--violet);
 
     --holo: linear-gradient(115deg, #ffb6dc, #c5b8ff, #a9dcff, #b4f5e2, #fff2b0, #ffb6dc);
@@ -26,6 +33,7 @@
     --font-body: "Pretendard Variable", Pretendard, -apple-system, "Apple SD Gothic Neo", "Malgun Gothic", system-ui, sans-serif;
 
     --radius: 24px;
+    --shadow-sm: 0 4px 12px -6px rgb(92 80 190 / .28);
     --shadow: 0 10px 30px -12px rgb(92 80 190 / .22);
     --shadow-lg: 0 24px 50px -18px rgb(92 80 190 / .4);
 
@@ -38,6 +46,31 @@
 
     /* 커튼이 열린 뒤 히어로 등장 */
     --intro-delay: .7s;
+}
+
+/* 다크 모드: 저녁이 지나고 밤이 된 하늘 */
+:root[data-theme="dark"] {
+    color-scheme: dark;
+
+    --bg: #10112b;
+    --tint: #191a3f;
+    --surface: #20214c;
+    --ink: #ecebff;
+    --ink-soft: #adabd6;
+    --line: #33346c;
+    --violet: #aaa1ff;
+    --on-violet: #14143a;
+    --violet-strong: #c2bbff;
+    --header-bg: rgb(32 33 76 / .97);
+    --selection: #4a4490;
+    --curtain-1: #2c2d66;
+    --curtain-2: #1c1d48;
+
+    --dusk: linear-gradient(180deg, #0b0c28 0%, #1b1c5a 48%, #4a3a8e 78%, #8f5f9f 100%);
+
+    --shadow-sm: 0 4px 12px -6px rgb(0 0 0 / .5);
+    --shadow: 0 10px 30px -12px rgb(0 0 0 / .55);
+    --shadow-lg: 0 24px 50px -18px rgb(0 0 0 / .7);
 }
 
 /* ---------- Base ---------- */
@@ -64,7 +97,7 @@ a { color: inherit; }
 h1, h2, h3 { line-height: 1.3; margin: 0; }
 h1:focus { outline: none; }
 code { font-family: ui-monospace, "Cascadia Code", Consolas, monospace; font-size: .92em; }
-::selection { background: #d9d2ff; }
+::selection { background: var(--selection); }
 
 :focus-visible { outline: 3px solid var(--violet); outline-offset: 3px; border-radius: 8px; }
 
@@ -90,8 +123,8 @@ code { font-family: ui-monospace, "Cascadia Code", Consolas, monospace; font-siz
     transform-origin: center top;
     animation: curtain-out .7s var(--ease-in-out) both;
 }
-.curtain__panel--1 { background: #cfc8ff; animation-delay: .2s; }
-.curtain__panel--2 { background: #e6e1ff; animation-delay: .1s; }
+.curtain__panel--1 { background: var(--curtain-1); animation-delay: .2s; }
+.curtain__panel--2 { background: var(--curtain-2); animation-delay: .1s; }
 .curtain__panel--3 { background: var(--bg); }
 
 @keyframes curtain-out {
@@ -139,7 +172,7 @@ code { font-family: ui-monospace, "Cascadia Code", Consolas, monospace; font-siz
     justify-content: space-between;
     gap: 16px;
     padding: 8px 10px 8px 24px;
-    background: rgb(255 255 255 / .97);
+    background: var(--header-bg);
     border-radius: 999px;
     box-shadow: var(--shadow);
 }
@@ -151,6 +184,7 @@ code { font-family: ui-monospace, "Cascadia Code", Consolas, monospace; font-siz
     letter-spacing: .01em;
     text-decoration: none;
     color: var(--violet);
+    margin-right: auto;
 }
 
 .site-nav { display: flex; gap: 2px; }
@@ -168,8 +202,72 @@ code { font-family: ui-monospace, "Cascadia Code", Consolas, monospace; font-siz
 .nav-toggle { position: absolute; opacity: 0; pointer-events: none; }
 .nav-burger { display: none; }
 
+/* ---------- 화면 모드 드롭다운 ---------- */
+html:not(.js) .theme-menu { display: none; }
+.theme-menu { position: relative; }
+.theme-menu__toggle {
+    display: grid;
+    place-items: center;
+    width: 40px; height: 40px;
+    padding: 0;
+    color: var(--violet);
+    background: var(--tint);
+    border: 0;
+    border-radius: 50%;
+    cursor: pointer;
+}
+.theme-icon { display: none; }
+[data-theme-pref="system"] .theme-icon--system,
+[data-theme-pref="light"] .theme-icon--light,
+[data-theme-pref="dark"] .theme-icon--dark { display: block; }
+
+.theme-menu__list {
+    position: absolute;
+    top: calc(100% + 14px);
+    right: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+    min-width: 170px;
+    padding: 8px;
+    background: var(--surface);
+    border-radius: 20px;
+    box-shadow: var(--shadow-lg);
+    opacity: 0;
+    visibility: hidden;
+    transform: translateY(-8px);
+    transition: transform .25s var(--ease-out), opacity .2s, visibility .25s;
+}
+.theme-menu.is-open .theme-menu__list { opacity: 1; visibility: visible; transform: none; }
+
+.theme-menu__item {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 8px 12px;
+    font: inherit;
+    font-size: .95rem;
+    font-weight: 600;
+    text-align: left;
+    color: var(--ink);
+    background: none;
+    border: 0;
+    border-radius: 12px;
+    cursor: pointer;
+    transition: background .2s, color .2s;
+}
+.theme-menu__item:hover { background: var(--tint); }
+.theme-menu__item[aria-checked="true"] { color: var(--violet); }
+
+/* 테마 전환 원: site.js 가 새 화면의 clip-path 를 애니메이션 */
+::view-transition-old(root),
+::view-transition-new(root) { animation: none; mix-blend-mode: normal; }
+
 @media (max-width: 720px) {
+    .theme-menu { order: 1; }
+
     .nav-burger {
+        order: 2;
         display: flex;
         flex-direction: column;
         justify-content: center;
@@ -254,15 +352,15 @@ code { font-family: ui-monospace, "Cascadia Code", Consolas, monospace; font-siz
     border-radius: 999px;
     transition: background .3s, color .3s, box-shadow .3s;
 }
-.btn--primary { background: var(--violet); color: #fff; box-shadow: var(--shadow); }
-.btn--primary:hover { background: #6358d8; box-shadow: var(--shadow-lg); }
+.btn--primary { background: var(--violet); color: var(--on-violet); box-shadow: var(--shadow); }
+.btn--primary:hover { background: var(--violet-strong); box-shadow: var(--shadow-lg); }
 .btn--ghost { background: var(--surface); color: var(--violet); box-shadow: var(--shadow); }
 .btn--ghost:hover { background: var(--tint); }
 .btn .icon { transition: transform .3s var(--ease-out); }
 .btn:hover .icon { transform: translateX(3px); }
 
-.hero .btn--primary { background: #fff; color: var(--violet); }
-.hero .btn--primary:hover { background: var(--tint); }
+.hero .btn--primary { background: #fff; color: #5a51d0; }
+.hero .btn--primary:hover { background: #eceaff; }
 .hero .btn--ghost { background: rgb(255 255 255 / .22); color: #fff; box-shadow: none; }
 .hero .btn--ghost:hover { background: rgb(255 255 255 / .36); }
 
@@ -272,7 +370,7 @@ code { font-family: ui-monospace, "Cascadia Code", Consolas, monospace; font-siz
     font-family: var(--font-head);
     font-size: .78rem;
     font-weight: 800;
-    color: var(--violet);
+    color: #5a51d0;
     background: rgb(255 255 255 / .92);
     border-radius: 999px;
 }
@@ -288,7 +386,7 @@ code { font-family: ui-monospace, "Cascadia Code", Consolas, monospace; font-siz
     font-weight: 600;
     background: var(--surface);
     border-radius: 999px;
-    box-shadow: 0 4px 12px -6px rgb(92 80 190 / .28);
+    box-shadow: var(--shadow-sm);
     transition: color .25s, background .25s;
 }
 .chip:hover { color: var(--violet); background: var(--tint); }
@@ -568,7 +666,7 @@ code { font-family: ui-monospace, "Cascadia Code", Consolas, monospace; font-siz
     padding: 20px 24px;
     background: var(--surface);
     border-radius: 20px;
-    box-shadow: 0 6px 18px -12px rgb(92 80 190 / .3);
+    box-shadow: var(--shadow-sm);
 }
 .timeline__item + .timeline__item { margin-top: 12px; }
 .timeline__period { font-family: var(--font-head); font-weight: 800; color: var(--violet); }
@@ -648,12 +746,12 @@ code { font-family: ui-monospace, "Cascadia Code", Consolas, monospace; font-siz
     background: var(--surface);
     border: 0;
     border-radius: 999px;
-    box-shadow: 0 4px 12px -6px rgb(92 80 190 / .28);
+    box-shadow: var(--shadow-sm);
     cursor: pointer;
     transition: background .25s, color .25s;
 }
 .filter__btn:hover { color: var(--violet); background: var(--tint); }
-.filter__btn.is-active { color: #fff; background: var(--violet); }
+.filter__btn.is-active { color: var(--on-violet); background: var(--violet); }
 
 .project-detail {
     max-width: 860px;
@@ -663,7 +761,7 @@ code { font-family: ui-monospace, "Cascadia Code", Consolas, monospace; font-siz
 .project-detail__hero { display: flex; flex-direction: column; align-items: center; gap: 8px; text-align: center; }
 .project-detail__hero .hero__cta { margin-top: 12px; }
 .project-detail__meta { display: flex; align-items: center; gap: 10px; }
-.project-detail__meta .badge { background: var(--tint); }
+.project-detail__meta .badge { color: var(--violet); background: var(--tint); }
 
 .back-link {
     align-self: flex-start;
@@ -717,7 +815,7 @@ code { font-family: ui-monospace, "Cascadia Code", Consolas, monospace; font-siz
 .prose blockquote {
     margin: 1.4em 0;
     padding: 4px 18px;
-    border-left: 4px solid #d9d2ff;
+    border-left: 4px solid var(--selection);
     color: var(--ink-soft);
 }
 
@@ -753,7 +851,7 @@ code { font-family: ui-monospace, "Cascadia Code", Consolas, monospace; font-siz
     font-size: clamp(6rem, 22vw, 10rem);
     line-height: 1.1;
 }
-.not-found .btn { position: relative; margin-top: 12px; background: #fff; color: var(--violet); }
+.not-found .btn { position: relative; margin-top: 12px; background: #fff; color: #5a51d0; }
 
 /* ==========================================================================
    Footer

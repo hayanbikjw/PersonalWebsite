@@ -137,10 +137,6 @@
 <section id="contact" class="section contact">
     <SectionTitle Title="Contact" Sub="저를 인터넷에서 찾아보세요" />
     <p class="contact__big" data-reveal="up">이곳에서도 만나보실 수 있습니다</p>
-    @if (!string.IsNullOrWhiteSpace(profile.Email))
-    {
-        <a class="contact__mail" href="mailto:@profile.Email" data-reveal="up">@profile.Email</a>
-    }
     <ul class="link-list">
         @for (var i = 0; i < data.Links.Count; i++)
         {

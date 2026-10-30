@@ -102,6 +102,69 @@
     window.addEventListener("scroll", onScroll, { passive: true });
     onScroll();
 
+    /* ---------- Theme: 시스템 / 밝게 / 어둡게 ---------- */
+    const themeMenu = document.querySelector(".theme-menu");
+    if (themeMenu) {
+        const toggle = themeMenu.querySelector(".theme-menu__toggle");
+        const items = [...themeMenu.querySelectorAll(".theme-menu__item")];
+        const systemDark = window.matchMedia("(prefers-color-scheme: dark)");
+        const resolve = (pref) => (pref === "system" ? (systemDark.matches ? "dark" : "light") : pref);
+
+        const applyTheme = (pref) => {
+            root.dataset.themePref = pref;
+            root.dataset.theme = resolve(pref);
+            items.forEach((item) => item.setAttribute("aria-checked", String(item.dataset.themeValue === pref)));
+        };
+
+        const setOpen = (open) => {
+            themeMenu.classList.toggle("is-open", open);
+            toggle.setAttribute("aria-expanded", String(open));
+        };
+
+        // (x, y) 에서 원이 퍼지며 새 테마가 드러남
+        const changeTheme = (pref, x, y) => {
+            const unchanged = resolve(pref) === root.dataset.theme;
+            if (unchanged || reduceMotion || !document.startViewTransition) {
+                applyTheme(pref);
+                return;
+            }
+            const transition = document.startViewTransition(() => applyTheme(pref));
+            transition.ready.then(() => {
+                const radius = Math.hypot(Math.max(x, innerWidth - x), Math.max(y, innerHeight - y));
+                root.animate(
+                    { clipPath: [`circle(0px at ${x}px ${y}px)`, `circle(${radius}px at ${x}px ${y}px)`] },
+                    { duration: 650, easing: "cubic-bezier(.4, 0, .2, 1)", pseudoElement: "::view-transition-new(root)" });
+            }).catch(() => { });
+        };
+
+        applyTheme(root.dataset.themePref || "system");
+
+        toggle.addEventListener("click", () => {
+            const nav = document.getElementById("nav-toggle");
+            if (nav) nav.checked = false; // 모바일 메뉴와 겹치지 않게
+            setOpen(!themeMenu.classList.contains("is-open"));
+        });
+        items.forEach((item) => item.addEventListener("click", (e) => {
+            const pref = item.dataset.themeValue;
+            try { localStorage.setItem("theme", pref); } catch { }
+            // 키보드로 고르면 좌표가 0 이므로 버튼 가운데에서 시작
+            const r = toggle.getBoundingClientRect();
+            const x = e.clientX || r.left + r.width / 2, y = e.clientY || r.top + r.height / 2;
+            setOpen(false);
+            toggle.focus();
+            changeTheme(pref, x, y);
+        }));
+        document.addEventListener("click", (e) => { if (!themeMenu.contains(e.target)) setOpen(false); });
+        document.addEventListener("keydown", (e) => {
+            if (e.key !== "Escape" || !themeMenu.classList.contains("is-open")) return;
+            setOpen(false);
+            toggle.focus();
+        });
+        systemDark.addEventListener("change", () => {
+            if (root.dataset.themePref === "system") changeTheme("system", innerWidth / 2, 0);
+        });
+    }
+
     /* ---------- Page top ---------- */
     document.querySelector(".page-top")?.addEventListener("click", () => {
         window.scrollTo({ top: 0, behavior: reduceMotion ? "auto" : "smooth" });

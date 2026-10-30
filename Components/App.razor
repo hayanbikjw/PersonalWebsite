@@ -8,8 +8,20 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <meta name="description" content="@SiteData.Data.Site.Description" />
     <base href="/" />
+    <link rel="icon" href="images/favicon.ico" />
     @* JS 가 켜져 있을 때만 등장 애니메이션을 숨김 상태로 시작 (JS 가 없으면 모든 내용이 그대로 보임) *@
     <script>document.documentElement.classList.add('js');</script>
+    @* 첫 화면이 그려지기 전에 테마를 정해 깜빡임을 막음 (site.js 의 테마 코드와 짝) *@
+    <script>
+        (() => {
+            let pref = null;
+            try { pref = localStorage.getItem('theme'); } catch { }
+            if (pref !== 'light' && pref !== 'dark') pref = 'system';
+            const dark = pref === 'dark' || (pref === 'system' && matchMedia('(prefers-color-scheme: dark)').matches);
+            document.documentElement.dataset.themePref = pref;
+            document.documentElement.dataset.theme = dark ? 'dark' : 'light';
+        })();
+    </script>
     <link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin />
     <link rel="stylesheet" href="https://hangeul.pstatic.net/hangeul_static/css/nanum-square-round.css" />
     <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Nunito:wght@600;800;900&display=swap" />

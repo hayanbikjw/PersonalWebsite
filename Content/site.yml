@@ -16,6 +16,7 @@ profile:
   greeting: "안녕하세요!"
   roles:                                   # 히어로에 나란히 표시
     - "Game Developer"
+    - "Programmer"
     - "Creator"
   tagline: "재미있는 것을 만드는 것을 좋아합니다"
   avatar: "images/nya.webp"                # 예: images/avatar.png (wwwroot 기준). 비우면 이니셜 표시
@@ -23,8 +24,8 @@ profile:
   email: "me@hayanbi.net"
   about:                                   # About 섹션 문단 (여러 개 가능)
     - "게임 개발을 하고 있습니다. 재미있는 게임을 만들기 위해 고민하고 노력합니다."
-    - "가끔씩은 밤하늘을 올려다보며 별을 관측합니다."
-    - "예쁘고 반짝이는 게 좋습니다. 컴퓨터 그래픽스 쪽에도 관심이 많습니다. "
+    - "예쁘고 반짝이는 게 좋습니다. 가끔씩은 밤하늘을 올려다보며 별을 관측합니다."
+    - "컴퓨터 그래픽스, 철도, 애니메이션에도 관심이 많습니다."
   facts:                                   # About 옆 작은 카드
     - label: "Based in"
       value: "Incheon"
@@ -45,7 +46,11 @@ timeline:                                  # 경력 / 학력 / 활동 (위에서
   - period: "2026.09"
     title: "'Guildream' steam, stove 출시"
     place: "steam, stove"
-    description: "만든 게임을 steam과 stove 양 플랫폼에 출시했습니다."
+    description: "만든 게임을 처음으로 steam과 stove 양 플랫폼에 출시했습니다."
+  - period: "2026.04 — 2026.09"
+    title: "신슈대학 국제교류학생 파견"
+    place: "신슈대학"
+    description: "일본 신슈대학 공학부로 교환학생을 다녀왔습니다."
   - period: "2025.07"
     title: "'TRUMPvsCHESS' itch.io 출시"
     place: "itch.io"
@@ -54,8 +59,8 @@ timeline:                                  # 경력 / 학력 / 활동 (위에서
     title: "2023 대구x엔젤 인디게임 페스티벌 동상 수상"
     place: "대구콘텐츠비즈니스센터"
     description: "만든 게임으로 인디게임 페스티벌에서 수상하였습니다."
-  - period: "2023 — Now"
-    title: "인하대학교 컴퓨터공학과 학부 재학중"
+  - period: "2023.02 — Now"
+    title: "인하대학교 컴퓨터공학과 학부 재학 중"
     place: "인하대학교"
     description: "인하대학교에서 컴퓨터공학을 전공하고 있습니다."
 
